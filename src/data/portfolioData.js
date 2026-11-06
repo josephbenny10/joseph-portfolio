@@ -24,13 +24,13 @@ export const showreel = {
 
 export const projects = [
   {
-    id: "brand",
-    title: "Brand",
+    id: "brand-new-day",
+    title: "Brand New Day",
     category: "Film Edit",
     videoUrl: "/assets/videos/BraND.mp4",
     thumbnail: "/assets/images/B N D.jpg",
     aspectRatio: "16:9",
-    description: "A cinematic film edit exploring visual tone, pacing, and atmosphere in DaVinci Resolve.",
+    description: "A cinematic Spider-Man edit inspired by Brand New Day, capturing the character's energy and atmosphere through carefully timed cuts, music synchronization and visual storytelling.",
   },
   {
     id: "breaking-bad",
@@ -39,7 +39,7 @@ export const projects = [
     videoUrl: "/assets/videos/BREAKING BAD.mp4",
     thumbnail: "/assets/images/BrBad.jpg",
     aspectRatio: "16:9",
-    description: "A dynamic series edit focusing on narrative tension, dramatic character arcs, and rhythmic cutting.",
+    description: "A dynamic Breaking Bad edit tracking narrative tension and dramatic character shifts through rhythmic cutting, musical timing, and atmospheric pacing.",
   },
   {
     id: "kingdom-of-heaven",
@@ -48,7 +48,7 @@ export const projects = [
     videoUrl: "/assets/videos/K O H.mp4",
     thumbnail: "/assets/images/KOH.jpg",
     aspectRatio: "16:9",
-    description: "An epic scene study highlighting scale, emotional gravity, and cinematic rhythm.",
+    description: "A cinematic scene study from Kingdom of Heaven, capturing epic scale and emotional gravity through measured pacing, visual rhythm, and music synchronization.",
   },
 ]
 
