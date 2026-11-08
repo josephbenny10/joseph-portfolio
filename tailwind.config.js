@@ -7,23 +7,22 @@ export default {
   theme: {
     extend: {
       colors: {
-        portfolio: {
-          bg: '#0a0a0a',
-          surface: '#111113',
-          card: '#151518',
-          border: 'rgba(255, 255, 255, 0.08)',
-          'border-hover': 'rgba(255, 255, 255, 0.2)',
-          accent: '#dc2626',
-          text: '#f4f4f5',
-          muted: '#8e8e93',
-          dim: '#52525b',
+        palette: {
+          bg: '#0F1432',
+          surface: '#13193D',
+          surfaceDark: '#0A0E26',
+          amber: '#FFAA00',
+          red: '#FF001E',
+          text: '#F2F0E9',
         },
       },
       fontFamily: {
         sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        wosker: ['"Wosker Demo"', '"Plus Jakarta Sans"', 'sans-serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+        display: ['"Barlow Condensed"', '"Plus Jakarta Sans"', 'sans-serif'],
+        condensed: ['"Barlow Condensed"', 'sans-serif'],
+        grotesk: ['"Space Grotesk"', 'sans-serif'],
+        wosker: ['"Wosker Demo"', '"Barlow Condensed"', 'sans-serif'],
+        mono: ['"Space Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       letterSpacing: {
         tighter: '-0.035em',

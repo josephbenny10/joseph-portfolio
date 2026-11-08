@@ -8,25 +8,25 @@ export default function Showreel() {
   const formattedDuration = formatDuration(duration)
 
   return (
-    <section id="showreel" className="py-24 sm:py-32 px-6 sm:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
+    <section id="showreel" className="py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-zinc-500 block mb-2">
+          <span className="text-xs font-mono uppercase tracking-widest text-[#F2F0E9]/60 block mb-2 font-medium">
             01 / Presentation
           </span>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
+          <h2 className="font-display text-4xl sm:text-6xl font-black tracking-tight text-[#F2F0E9] uppercase">
             Featured Edits Reel
           </h2>
         </div>
 
-        <p className="text-zinc-400 text-sm max-w-md">
+        <p className="text-[#F2F0E9]/80 text-sm sm:text-base max-w-lg leading-relaxed">
           A compilation of film edits, cinematic reels, and visual scene studies edited in DaVinci Resolve.
         </p>
       </div>
 
       {/* Large Video Presentation */}
-      <div className="w-full rounded-sm overflow-hidden border border-white/[0.08] shadow-2xl bg-[#0d0d0f]">
+      <div className="w-full rounded-sm overflow-hidden border border-[#F2F0E9]/15 shadow-2xl bg-[#0A0E26]">
         <VideoPlayer
           src={showreel.videoUrl}
           poster={showreel.posterUrl}
@@ -37,7 +37,7 @@ export default function Showreel() {
       </div>
 
       {/* Minimal footer notes */}
-      <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-zinc-500 gap-2">
+      <div className="mt-4 flex flex-col sm:flex-row sm:items-center justify-between text-xs text-[#F2F0E9]/70 gap-2 font-mono">
         <span>Software: DaVinci Resolve</span>
         {formattedDuration ? (
           <span>Duration: {formattedDuration}</span>

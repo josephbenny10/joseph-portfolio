@@ -50,7 +50,7 @@ function ProjectItem({ project, onSelect }) {
       className="group cursor-pointer space-y-4"
     >
       {/* Large Cinematic Thumbnail Container */}
-      <div className="relative aspect-[16/9] w-full bg-[#101013] rounded-[2px] overflow-hidden border border-white/[0.06] group-hover:border-white/20 transition-all duration-500">
+      <div className="relative aspect-[16/9] w-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FF001E] shadow-md group-hover:shadow-2xl transition-all duration-500">
         {hasMedia ? (
           <>
             {/* Thumbnail Image */}
@@ -84,12 +84,12 @@ function ProjectItem({ project, onSelect }) {
           </>
         ) : (
           /* Clearly Marked Empty Placeholder */
-          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#0d0d10] border border-dashed border-white/[0.08] group-hover:border-white/20 transition-colors">
-            <Film className="w-7 h-7 text-zinc-600 group-hover:text-zinc-400 transition-colors mb-3 stroke-[1.5]" />
-            <span className="font-display text-sm text-zinc-400 group-hover:text-zinc-200 transition-colors">
+          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#13193D]/60 border border-dashed border-[#F2F0E9]/20 group-hover:border-[#FF001E]/60 transition-colors">
+            <Film className="w-7 h-7 text-[#F2F0E9]/60 group-hover:text-[#FFAA00] transition-colors mb-3 stroke-[1.5]" />
+            <span className="font-display text-sm text-[#F2F0E9] transition-colors font-bold">
               {project.title}
             </span>
-            <span className="text-[11px] text-zinc-600 mt-1 font-mono tracking-wider">
+            <span className="text-[11px] text-[#F2F0E9]/50 mt-1 font-mono tracking-wider">
               Add video in public/assets/videos/
             </span>
           </div>
@@ -98,10 +98,10 @@ function ProjectItem({ project, onSelect }) {
 
       {/* Clean Project Title and Minimal Metadata */}
       <div className="pt-1">
-        <h3 className="font-display font-medium text-lg sm:text-xl text-white group-hover:text-zinc-300 transition-colors tracking-tight">
+        <h3 className="font-display font-bold text-xl sm:text-2xl text-[#F2F0E9] group-hover:text-[#FFAA00] transition-colors tracking-tight">
           {project.title}
         </h3>
-        <p className="text-xs text-zinc-500 mt-0.5 tracking-wide">
+        <p className="text-xs text-[#F2F0E9]/65 mt-0.5 tracking-wide font-mono">
           {project.category}
           {formattedDuration ? ` · ${formattedDuration}` : ''}
         </p>
@@ -112,25 +112,25 @@ function ProjectItem({ project, onSelect }) {
 
 export default function SelectedWork({ onSelectProject }) {
   return (
-    <section id="work" className="py-28 sm:py-36 px-6 sm:px-8 max-w-7xl mx-auto border-t border-white/[0.06]">
+    <section id="work" className="py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-16 sm:mb-20">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 sm:mb-16">
         <div>
-          <span className="text-xs font-mono uppercase tracking-widest text-zinc-500 block mb-2">
-            Portfolio
+          <span className="text-xs font-mono uppercase tracking-widest text-[#F2F0E9]/60 block mb-2 font-medium">
+            02 / Portfolio
           </span>
-          <h2 className="font-display text-3xl sm:text-5xl font-bold tracking-tight text-white">
+          <h2 className="font-display text-4xl sm:text-6xl font-black tracking-tight text-[#F2F0E9] uppercase">
             Selected Work
           </h2>
         </div>
 
-        <p className="text-zinc-400 text-sm max-w-md">
+        <p className="text-[#F2F0E9]/80 text-sm sm:text-base max-w-lg leading-relaxed">
           A visual collection of film edits, cinematic reels, and video cuts. Select any piece to view the full video.
         </p>
       </div>
 
-      {/* Generously Spaced 2-Column Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 sm:gap-16 lg:gap-20">
+      {/* Spacious 3-Column Editorial Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 xl:gap-12">
         {projects.map((project) => (
           <ProjectItem
             key={project.id}

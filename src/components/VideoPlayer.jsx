@@ -177,7 +177,7 @@ export default function VideoPlayer({
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => isPlaying && setShowControls(false)}
-      className={`relative group bg-[#0a0a0a] overflow-hidden select-none ${className}`}
+      className={`relative group bg-[#0A0E26] overflow-hidden select-none ${className}`}
       style={{ aspectRatio: aspectRatio.replace(':', '/') }}
     >
       {/* Video Element */}
@@ -203,9 +203,9 @@ export default function VideoPlayer({
             type="button"
             onClick={togglePlay}
             aria-label="Play Video"
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/10 hover:bg-white/20 border border-white/30 flex items-center justify-center transition-all duration-300 hover:scale-105"
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-[#FF001E] hover:bg-[#d9001a] border border-[#F2F0E9]/30 hover:border-[#FFAA00] flex items-center justify-center transition-all duration-300 hover:scale-105 shadow-xl"
           >
-            <Play className="w-6 h-6 sm:w-7 sm:h-7 text-white fill-white ml-1" />
+            <Play className="w-6 h-6 sm:w-7 sm:h-7 text-[#F2F0E9] fill-[#F2F0E9] ml-1" />
           </button>
         </div>
       )}
@@ -217,7 +217,7 @@ export default function VideoPlayer({
             showControls ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="font-sans text-xs tracking-wider text-white/80 font-medium drop-shadow-md">
+          <span className="font-sans text-xs tracking-wider text-[#F2F0E9]/90 font-medium drop-shadow-md">
             {title}
           </span>
         </div>
@@ -235,32 +235,32 @@ export default function VideoPlayer({
           className="relative w-full h-3 group/scrub flex items-center cursor-pointer mb-2"
         >
           {/* Track background */}
-          <div className="w-full h-[2px] group-hover/scrub:h-[4px] bg-white/20 rounded-full transition-all">
-            {/* Active red fill */}
+          <div className="w-full h-[2px] group-hover/scrub:h-[4px] bg-[#F2F0E9]/20 rounded-full transition-all">
+            {/* Active primary accent fill */}
             <div
               style={{ width: `${progressPercent}%` }}
-              className="h-full bg-[#dc2626] rounded-full relative"
+              className="h-full bg-[#FF001E] rounded-full relative"
             >
               {/* Playhead dot */}
-              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-white opacity-0 group-hover/scrub:opacity-100 transition-opacity" />
+              <div className="absolute right-0 top-1/2 -translate-y-1/2 w-2.5 h-2.5 rounded-full bg-[#FFAA00] opacity-0 group-hover/scrub:opacity-100 transition-opacity shadow-xs" />
             </div>
           </div>
         </div>
 
         {/* Controls row */}
-        <div className="flex items-center justify-between text-xs text-zinc-300">
+        <div className="flex items-center justify-between text-xs text-[#F2F0E9]/90">
           <div className="flex items-center gap-4">
             <button
               type="button"
               onClick={togglePlay}
-              className="p-1 hover:text-white transition-colors"
+              className="p-1 hover:text-[#FFAA00] transition-colors"
               aria-label={isPlaying ? "Pause" : "Play"}
             >
               {isPlaying ? <Pause className="w-4 h-4 fill-current" /> : <Play className="w-4 h-4 fill-current" />}
             </button>
 
-            <span className="font-mono text-[11px] text-zinc-400">
-              {formatTime(currentTime)} <span className="text-zinc-600">/</span> {formatTime(duration)}
+            <span className="font-mono text-[11px] text-[#F2F0E9]/80">
+              {formatTime(currentTime)} <span className="text-[#F2F0E9]/40">/</span> {formatTime(duration)}
             </span>
           </div>
 
@@ -268,7 +268,7 @@ export default function VideoPlayer({
             <button
               type="button"
               onClick={toggleMute}
-              className="p-1 hover:text-white transition-colors"
+              className="p-1 hover:text-[#FFAA00] transition-colors"
               aria-label={isMuted ? "Unmute" : "Mute"}
             >
               {isMuted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
@@ -277,7 +277,7 @@ export default function VideoPlayer({
             <button
               type="button"
               onClick={toggleFullscreen}
-              className="p-1 hover:text-white transition-colors"
+              className="p-1 hover:text-[#FFAA00] transition-colors"
               aria-label="Toggle Fullscreen"
             >
               {isFullscreen ? <Minimize className="w-4 h-4" /> : <Maximize className="w-4 h-4" />}

@@ -54,17 +54,15 @@ export default function CustomCursor() {
       animate={{
         width: isHovered ? 72 : 10,
         height: isHovered ? 72 : 10,
-        backgroundColor: isHovered ? 'rgba(244, 244, 245, 0.95)' : '#dc2626',
-        mixBlendMode: isHovered ? 'difference' : 'normal',
+        backgroundColor: isHovered ? '#FF001E' : 'rgba(242, 240, 233, 0.75)',
       }}
       transition={{ type: 'spring', damping: 26, stiffness: 350, mass: 0.5 }}
     >
       {isHovered && cursorText && (
-        <span className="font-mono text-[10px] tracking-widest font-bold text-black uppercase select-none">
+        <span className="font-mono text-[10px] tracking-widest font-bold text-[#F2F0E9] uppercase select-none">
           {cursorText}
         </span>
       )}
     </motion.div>
   )
 }
-
