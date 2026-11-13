@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence, useScroll, useReducedMotion } from 'framer-motion'
 import { Menu, X, Instagram } from 'lucide-react'
 import { profile } from '../data/portfolioData'
+import Magnetic from './Magnetic'
 
 export default function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
@@ -129,17 +130,19 @@ export default function Navbar() {
               )
             })}
 
-            {/* Instagram Link */}
-            <a
-              href={profile.instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Instagram Profile"
-              className="group inline-flex items-center gap-1.5 px-3 py-1 text-xs text-[#F2F0E9] hover:bg-[#FF001E] hover:text-[#F2F0E9] hover:border-[#FF001E] bg-[#13193D] border border-[#F2F0E9]/15 rounded-[2px] font-medium transition-all ml-1 font-mono"
-            >
-              <Instagram className="w-3.5 h-3.5 text-[#F2F0E9]/80 group-hover:text-[#F2F0E9] transition-colors" />
-              <span>Instagram</span>
-            </a>
+            {/* Instagram Link with Magnetic Precision */}
+            <Magnetic strength={0.28} maxDistance={6}>
+              <a
+                href={profile.instagramUrl}
+                target="_blank"
+                rel="noreferrer"
+                aria-label="Instagram Profile"
+                className="group inline-flex items-center gap-1.5 px-3 py-1 text-xs text-[#F2F0E9] hover:bg-[#FF001E] hover:text-[#F2F0E9] hover:border-[#FF001E] bg-[#13193D] border border-[#F2F0E9]/15 rounded-[2px] font-medium transition-all ml-1 font-mono shadow-xs hover:shadow-md"
+              >
+                <Instagram className="w-3.5 h-3.5 text-[#F2F0E9]/80 group-hover:text-[#F2F0E9] transition-colors" />
+                <span>Instagram</span>
+              </a>
+            </Magnetic>
           </nav>
 
           {/* Mobile Menu Button */}

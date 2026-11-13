@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence } from 'framer-motion'
+import CinematicBackground from './components/CinematicBackground'
 import CinematicEntrance from './components/CinematicEntrance'
 import CustomCursor from './components/CustomCursor'
 import Navbar from './components/Navbar'
@@ -16,7 +17,10 @@ export default function App() {
   const [activeProject, setActiveProject] = useState(null)
 
   return (
-    <div className="min-h-screen bg-[#0F1432] text-[#F2F0E9] selection:bg-[#FF001E] selection:text-[#F2F0E9]">
+    <div className="min-h-screen bg-[#0F1432] text-[#F2F0E9] selection:bg-[#FF001E] selection:text-[#F2F0E9] relative">
+      {/* Unified Multi-Layered 3D Cinematic Background Environment */}
+      <CinematicBackground />
+
       {/* Full-Screen Cinematic SEPH Title Sequence */}
       <CinematicEntrance />
 
@@ -30,7 +34,7 @@ export default function App() {
       <Navbar />
 
       {/* Main Content Flow — fully ready and rendered underneath */}
-      <main className="overflow-x-hidden">
+      <main className="relative z-10 overflow-x-hidden">
         <Hero onSelectProject={(project) => setActiveProject(project)} />
         <MarqueeTicker />
         <SelectedWork onSelectProject={(project) => setActiveProject(project)} />

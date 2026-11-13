@@ -66,6 +66,7 @@ body {
 
 /* Custom cursor hide default only when custom cursor is active on fine pointer devices */
 @media (hover: hover) and (pointer: fine) {
+
   body.has-custom-cursor,
   body.has-custom-cursor a,
   body.has-custom-cursor button,

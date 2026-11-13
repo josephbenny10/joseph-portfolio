@@ -1,62 +1,132 @@
-import { motion, useReducedMotion } from 'framer-motion'
-import { profile } from '../data/portfolioData'
+import { useRef, useCallback, useEffect } from 'react'
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionValue,
+  useSpring,
+  useReducedMotion,
+} from 'framer-motion'
+import { FilmSprockets } from '../components/CinematicElements'
 
 export default function About() {
+  const sectionRef = useRef(null)
+  const isFinePointer = useRef(true)
   const shouldReduceMotion = useReducedMotion()
 
-  const itemVariants = {
-    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.55,
-        ease: [0.16, 1, 0.3, 1],
-      },
+  useEffect(() => {
+    isFinePointer.current = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+  }, [])
+
+  // ── Scroll-based layered depth ──
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ['start end', 'end start'],
+  })
+
+  // Subtle opposing scroll drift between heading and narrative column
+  const headingY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [-25, 25])
+  const textColY = useTransform(scrollYProgress, [0, 1], shouldReduceMotion ? [0, 0] : [15, -15])
+
+  // ── Cursor-based interactive motion ──
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  const springConfig = { damping: 24, stiffness: 220, mass: 0.4 }
+  const smoothX = useSpring(mouseX, springConfig)
+  const smoothY = useSpring(mouseY, springConfig)
+
+  // Subtle interactive shifts for text block tilt
+  const textTiltX = useTransform(smoothY, [-0.5, 0.5], shouldReduceMotion ? 0 : [1.8, -1.8])
+  const textTiltY = useTransform(smoothX, [-0.5, 0.5], shouldReduceMotion ? 0 : [-1.8, 1.8])
+
+  const handleMouseMove = useCallback(
+    (e) => {
+      if (shouldReduceMotion || !isFinePointer.current || !sectionRef.current) return
+      const rect = sectionRef.current.getBoundingClientRect()
+      if (!rect.width || !rect.height) return
+      const normX = (e.clientX - rect.left) / rect.width - 0.5
+      const normY = (e.clientY - rect.top) / rect.height - 0.5
+      mouseX.set(Math.max(-0.5, Math.min(0.5, normX)))
+      mouseY.set(Math.max(-0.5, Math.min(0.5, normY)))
     },
-  }
+    [shouldReduceMotion, mouseX, mouseY]
+  )
+
+  const handleMouseLeave = useCallback(() => {
+    mouseX.set(0)
+    mouseY.set(0)
+  }, [mouseX, mouseY])
 
   const containerVariants = {
     hidden: {},
     visible: {
       transition: {
-        staggerChildren: 0.08,
+        staggerChildren: 0.12,
+      },
+    },
+  }
+
+  const itemVariants = {
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 22 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.65,
+        ease: [0.16, 1, 0.3, 1],
       },
     },
   }
 
   return (
-    <section id="about" className="py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 xl:gap-20">
-        {/* Left Column */}
+    <section
+      id="about"
+      ref={sectionRef}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="relative py-24 sm:py-36 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12 overflow-hidden select-none"
+    >
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 xl:gap-20 items-start">
+        {/* Left Column: Layered Section Title & 35mm Film Detail */}
         <motion.div
-          initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: false, amount: 0.2 }}
-          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-          className="lg:col-span-4 space-y-3"
+          style={{ y: headingY }}
+          className="lg:col-span-4 space-y-4 lg:sticky lg:top-28 will-change-transform relative"
         >
+          {/* Subtle 35mm Film Perforation Kicker */}
+          <div className="w-24 overflow-hidden opacity-30 pb-1">
+            <FilmSprockets orientation="horizontal" count={5} />
+          </div>
+
           <span className="text-xs font-mono uppercase tracking-widest text-[#F2F0E9]/60 block font-medium">
             02 / About Me
           </span>
-          <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#F2F0E9] leading-tight uppercase">
+
+          <h2 className="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-[#F2F0E9] leading-tight uppercase drop-shadow-[0_8px_20px_rgba(0,0,0,0.6)]">
             Video editor.
           </h2>
         </motion.div>
 
-        {/* Right Column: Wide Editorial Introduction */}
+        {/* Right Column: Wide Editorial Narrative with Layered Depth */}
         <motion.div
+          style={{
+            y: textColY,
+            perspective: 1000,
+            rotateX: textTiltX,
+            rotateY: textTiltY,
+            transformStyle: 'preserve-3d',
+          }}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: false, amount: 0.15 }}
-          className="lg:col-span-8 space-y-6 text-[#F2F0E9] leading-relaxed font-normal"
+          className="lg:col-span-8 space-y-6 text-[#F2F0E9] leading-relaxed font-normal will-change-transform"
         >
           <motion.p
             variants={itemVariants}
             className="text-lg sm:text-xl lg:text-2xl text-[#F2F0E9]/90 font-normal leading-relaxed max-w-4xl"
           >
-            I am Joseph Benny, a video editor based in Kerala, India, available for projects worldwide. I am deeply passionate about film editing, cinema, and the art of visual storytelling.
+            I am Joseph Benny, a video editor based in Kerala, India. I am deeply passionate about film editing, cinema, and the art of visual storytelling.
           </motion.p>
 
           <motion.p
@@ -70,41 +140,8 @@ export default function About() {
             variants={itemVariants}
             className="text-base sm:text-lg text-[#F2F0E9]/80 leading-relaxed max-w-4xl"
           >
-            <span className="text-[#FFAA00] font-semibold">DaVinci Resolve</span> is my primary editing software, where I work on cutting, audio synchronization, and color grading. I am continuously refining my craft and am open to freelance collaborations.
+            <span className="text-[#FFAA00] font-semibold">DaVinci Resolve</span> is my primary editing software, where I work on cutting, audio synchronization, and color grading. I explore how pacing, musical rhythm, and intentional cut choices reframe an edit's emotional weight.
           </motion.p>
-
-          {/* Quick Details Strip */}
-          <motion.div
-            variants={itemVariants}
-            className="pt-8 border-t border-[#F2F0E9]/12 grid grid-cols-1 sm:grid-cols-3 gap-8 text-xs max-w-4xl"
-          >
-            <div className="space-y-1">
-              <span className="text-[#F2F0E9]/50 font-mono uppercase text-[10px] tracking-wider block">
-                Location
-              </span>
-              <span className="text-[#F2F0E9] font-semibold block text-sm">
-                {profile.location}
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-[#F2F0E9]/50 font-mono uppercase text-[10px] tracking-wider block">
-                Availability
-              </span>
-              <span className="text-[#F2F0E9] font-semibold block text-sm">
-                {profile.availability}
-              </span>
-            </div>
-
-            <div className="space-y-1">
-              <span className="text-[#F2F0E9]/50 font-mono uppercase text-[10px] tracking-wider block">
-                Primary Software
-              </span>
-              <span className="text-[#F2F0E9] font-semibold block text-sm">
-                {profile.primarySoftware}
-              </span>
-            </div>
-          </motion.div>
         </motion.div>
       </div>
     </section>

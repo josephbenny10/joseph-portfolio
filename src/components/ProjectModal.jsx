@@ -3,6 +3,8 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, ArrowRight, Film } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import { formatDuration } from '../utils/formatTime'
+import Magnetic from './Magnetic'
+import { ViewfinderMarks } from './CinematicElements'
 
 export default function ProjectModal({ project, onClose, onSelectProject }) {
   const shouldReduceMotion = useReducedMotion()
@@ -242,20 +244,33 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
-      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
+      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
       onClick={(e) => {
         // Close when clicking directly on the outer backdrop
         if (e.target === e.currentTarget) {
           onClose()
         }
       }}
-      className="fixed inset-0 z-50 bg-[#0F1432] text-[#F2F0E9] flex flex-col justify-between p-5 sm:p-8 md:p-10 select-none overflow-y-auto"
+      className="fixed inset-0 z-50 bg-[#0F1432]/98 backdrop-blur-xl text-[#F2F0E9] flex flex-col justify-between p-5 sm:p-8 md:p-10 select-none overflow-y-auto"
     >
+      {/* 35mm Shutter-Burn Light Flare on Modal Open */}
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0.85, scaleX: 1.15 }}
+        animate={{ opacity: 0, scaleX: 1 }}
+        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        className="pointer-events-none absolute inset-0 z-50 bg-[radial-gradient(ellipse_at_center,rgba(255,170,0,0.45)_0%,rgba(255,0,30,0.25)_40%,transparent_75%)] mix-blend-screen"
+      />
+
       {/* ── 2. HEADER ── */}
-      <header className="w-full flex items-center justify-between shrink-0">
+      <motion.header
+        initial={shouldReduceMotion ? {} : { y: -12, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="w-full flex items-center justify-between shrink-0"
+      >
         {/* Project Title (Top-Left) */}
         <div className="flex items-center gap-2.5 sm:gap-3">
           <span className="font-display font-semibold text-sm sm:text-base tracking-wide uppercase text-[#F2F0E9]">
@@ -268,24 +283,32 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
         </div>
 
         {/* Close Button (Top-Right) */}
-        <button
-          onClick={onClose}
-          className="group flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#F2F0E9]/70 hover:text-[#FF001E] transition-colors p-1 cursor-pointer"
-          aria-label="Close project preview"
-        >
-          <span>Close</span>
-          <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-200 ease-out motion-reduce:transform-none" />
-        </button>
-      </header>
+        <Magnetic strength={0.3} maxDistance={6}>
+          <button
+            onClick={onClose}
+            className="group flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#F2F0E9]/70 hover:text-[#FF001E] transition-colors p-1 cursor-pointer"
+            aria-label="Close project preview"
+          >
+            <span>Close</span>
+            <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-200 ease-out motion-reduce:transform-none" />
+          </button>
+        </Magnetic>
+      </motion.header>
 
       {/* ── 3. VIDEO & 4. CONTROLS (Center) ── */}
-      <main className="flex-1 my-auto py-4 flex flex-col items-center justify-center w-full">
+      <motion.main
+        initial={shouldReduceMotion ? {} : { scale: 0.96, y: 15, opacity: 0 }}
+        animate={{ scale: 1, y: 0, opacity: 1 }}
+        transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+        className="flex-1 my-auto py-4 flex flex-col items-center justify-center w-full"
+      >
         {/* Large Video Player in the Centre */}
         <div
           ref={playerContainerRef}
           style={{ width: 'min(88vw, calc(72vh * 16 / 9))', aspectRatio: '16 / 9' }}
-          className="relative bg-black rounded-[2px] overflow-hidden flex items-center justify-center shrink-0 shadow-2xl"
+          className="relative bg-black rounded-[2px] overflow-hidden flex items-center justify-center shrink-0 shadow-2xl border border-[#F2F0E9]/15"
         >
+          <ViewfinderMarks size={12} color="#FFAA00" strokeWidth={1.5} />
           {cleanVideoUrl ? (
             <video
               ref={videoRef}
@@ -385,7 +408,7 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
             </div>
           </div>
         </div>
-      </main>
+      </motion.main>
 
       {/* ── 5. NAVIGATION (Bottom) ── */}
       <footer className="w-full flex items-center justify-between shrink-0 pt-4">

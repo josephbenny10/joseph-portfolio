@@ -3,15 +3,15 @@ export const profile = {
   identity: "SEPH — Video Editor",
   role: "Video Editor",
   speciality: "Film Edits & Cinematic Video Editing",
-  location: "Based in Kerala, India · Available Worldwide",
+  location: "Kerala, India",
   primarySoftware: "DaVinci Resolve",
   availability: "Available for Freelance Collaborations",
   availabilityDetail: "Available for Freelance Collaborations",
   instagramHandle: "@s_eph_",
   instagramUrl: "https://www.instagram.com/s_eph_/",
   email: "josephbenny1810@gmail.com",
-  intro: "Video editor based in Kerala, India · Available Worldwide. I craft cinematic film edits and short-form reels with a focus on rhythm, atmosphere, and emotional pacing.",
-  bio: "I am a video editor based in Kerala, India · Available Worldwide, passionate about cinema and visual storytelling. I specialize in film edits, scene studies, and short-form cinematic reels that I share on Instagram.\n\nUsing DaVinci Resolve as my primary creative tool, I explore how pacing, music synchronicity, and intentional cut choices can reframe a scene's emotional weight. I am available for freelance collaborations, custom video edits, and creative projects.",
+  intro: "Video editor crafting cinematic film edits and short-form reels with a focus on rhythm, atmosphere, and emotional pacing.",
+  bio: "I am a video editor based in Kerala, India, passionate about cinema and visual storytelling. I specialize in film edits, scene studies, and short-form cinematic reels that I share on Instagram.\n\nUsing DaVinci Resolve as my primary creative tool, I explore how pacing, music synchronicity, and intentional cut choices can reframe a scene's emotional weight.",
 }
 
 export const projects = [

@@ -9,6 +9,7 @@ import {
 import { Film } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import { formatDuration } from '../utils/formatTime'
+import { ViewfinderMarks } from '../components/CinematicElements'
 
 function ProjectItem({ project, onSelect }) {
   const [isHovered, setIsHovered] = useState(false)
@@ -103,8 +104,23 @@ function ProjectItem({ project, onSelect }) {
       onMouseMove={handleMouseMove}
       className="group cursor-pointer space-y-4"
     >
-      {/* 3D Perspective Card Container with Subtle Tilt */}
-      <div style={{ perspective: 1000 }} className="w-full">
+      {/* 3D Perspective Card Container with 35mm Celluloid Frame */}
+      <div style={{ perspective: 1000 }} className="w-full relative">
+        {/* 35mm Celluloid Frame Border & Viewfinder Marks */}
+        <div
+          className={`absolute -inset-1.5 sm:-inset-2 rounded-[3px] border pointer-events-none transition-all duration-500 ease-out select-none ${
+            isHovered
+              ? 'border-[#FFAA00]/70 bg-[#070A1C]/60 shadow-[0_0_35px_rgba(255,170,0,0.14)]'
+              : 'border-[#F2F0E9]/12 bg-transparent'
+          }`}
+        >
+          <ViewfinderMarks
+            size={10}
+            color={isHovered ? '#FFAA00' : 'rgba(242,240,233,0.3)'}
+            strokeWidth={1.2}
+          />
+        </div>
+
         <motion.div
           ref={cardRef}
           style={
@@ -116,8 +132,17 @@ function ProjectItem({ project, onSelect }) {
                   transformStyle: 'preserve-3d',
                 }
           }
-          className="relative aspect-[16/9] w-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-md group-hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-500 will-change-transform"
+          className="relative aspect-[16/9] w-full bg-[#070A1C] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-[0_20px_45px_rgba(0,0,0,0.8)] group-hover:shadow-[0_26px_56px_rgba(0,0,0,0.85),0_0_28px_rgba(255,170,0,0.14)] transition-[border-color,box-shadow] duration-500 will-change-transform z-10"
         >
+          {/* Soft Anamorphic Light Flare on Frame Hover */}
+          <div
+            className={`absolute inset-0 bg-gradient-to-tr from-transparent via-[#FFAA00]/15 to-[#FF001E]/10 pointer-events-none transition-opacity duration-700 ease-out z-20 ${
+              isHovered ? 'opacity-100' : 'opacity-0'
+            }`}
+          />
+
+          {/* Cinematic Frame Vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent pointer-events-none z-10" />
           {hasMedia ? (
             <motion.div
               style={
@@ -129,7 +154,7 @@ function ProjectItem({ project, onSelect }) {
                     }
               }
               animate={{
-                scale: isHovered ? 1.06 : 1.02,
+                scale: isHovered ? 1.07 : 1.02,
               }}
               transition={{
                 scale: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
@@ -220,7 +245,7 @@ export default function SelectedWork({ onSelectProject }) {
   }
 
   return (
-    <section id="work" className="py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12">
+    <section id="work" className="relative py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12 overflow-hidden">
       {/* Section Header */}
       <motion.div
         initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}

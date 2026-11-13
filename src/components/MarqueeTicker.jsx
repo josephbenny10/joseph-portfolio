@@ -10,9 +10,9 @@ export default function MarqueeTicker({
     "SEPH — VIDEO EDITOR",
     "FILM EDITS",
     "CINEMATIC REELS",
-    "DAVINCI RESOLVE",
-    "KERALA, INDIA",
-    "AVAILABLE WORLDWIDE",
+    "SCENE STUDIES",
+    "RHYTHM & PACING",
+    "VISUAL STORYTELLING",
   ]
 
   return (
