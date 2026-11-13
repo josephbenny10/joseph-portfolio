@@ -1,5 +1,11 @@
-import { useState, useRef } from 'react'
-import { motion, useReducedMotion } from 'framer-motion'
+import { useState, useRef, useEffect, useCallback } from 'react'
+import {
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+  useReducedMotion,
+} from 'framer-motion'
 import { Film } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import { formatDuration } from '../utils/formatTime'
@@ -8,17 +14,61 @@ function ProjectItem({ project, onSelect }) {
   const [isHovered, setIsHovered] = useState(false)
   const [duration, setDuration] = useState(null)
   const videoRef = useRef(null)
+  const cardRef = useRef(null)
+  const isFinePointer = useRef(true)
+
+  const shouldReduceMotion = useReducedMotion()
+
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)')
+    isFinePointer.current = mq.matches
+    const handler = (e) => {
+      isFinePointer.current = e.matches
+    }
+    mq.addEventListener('change', handler)
+    return () => mq.removeEventListener('change', handler)
+  }, [])
 
   const cleanThumbnail = project.thumbnail ? encodeURI(decodeURI(project.thumbnail)) : ''
   const cleanVideoUrl = project.videoUrl ? encodeURI(decodeURI(project.videoUrl)) : ''
   const hasMedia = Boolean(cleanThumbnail || cleanVideoUrl)
   const formattedDuration = formatDuration(duration)
 
+  // Mouse tracking normalized coordinates [-0.5, 0.5] from card center
+  const mouseX = useMotionValue(0)
+  const mouseY = useMotionValue(0)
+
+  // Overdamped spring: fluid continuous tracking with zero bounce and smooth reset
+  const springConfig = { damping: 26, stiffness: 220, mass: 0.5 }
+  const smoothX = useSpring(mouseX, springConfig)
+  const smoothY = useSpring(mouseY, springConfig)
+
+  // Subtle 3D perspective card tilt: tilts in direction of cursor (~5.5deg max)
+  const rotateX = useTransform(smoothY, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [5.5, -5.5])
+  const rotateY = useTransform(smoothX, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [-5.5, 5.5])
+
+  // Opposite parallax on project image (~9px max) creating physical cinematic depth
+  const imgX = useTransform(smoothX, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [9, -9])
+  const imgY = useTransform(smoothY, [-0.5, 0.5], shouldReduceMotion ? [0, 0] : [7, -7])
+
   const handleMetadata = (e) => {
     if (e.target && e.target.duration && isFinite(e.target.duration) && e.target.duration > 0) {
       setDuration(e.target.duration)
     }
   }
+
+  const handleMouseMove = useCallback((e) => {
+    if (shouldReduceMotion || !isFinePointer.current || !cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    if (!rect.width || !rect.height) return
+
+    // Calculate normalized offset from center: -0.5 (left/top) to +0.5 (right/bottom)
+    const normX = (e.clientX - rect.left) / rect.width - 0.5
+    const normY = (e.clientY - rect.top) / rect.height - 0.5
+
+    mouseX.set(Math.max(-0.5, Math.min(0.5, normX)))
+    mouseY.set(Math.max(-0.5, Math.min(0.5, normY)))
+  }, [shouldReduceMotion, mouseX, mouseY])
 
   const handleMouseEnter = () => {
     setIsHovered(true)
@@ -29,6 +79,8 @@ function ProjectItem({ project, onSelect }) {
 
   const handleMouseLeave = () => {
     setIsHovered(false)
+    mouseX.set(0)
+    mouseY.set(0)
     if (cleanVideoUrl && videoRef.current) {
       videoRef.current.pause()
       videoRef.current.currentTime = 0
@@ -48,53 +100,85 @@ function ProjectItem({ project, onSelect }) {
       onClick={handleClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onMouseMove={handleMouseMove}
       className="group cursor-pointer space-y-4"
     >
-      {/* Large Cinematic Thumbnail Container */}
-      <div className="relative aspect-[16/9] w-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FF001E] shadow-md group-hover:shadow-2xl transition-all duration-500">
-        {hasMedia ? (
-          <>
-            {/* Thumbnail Image */}
-            {cleanThumbnail && (
-              <img
-                src={cleanThumbnail}
-                alt={project.title}
-                className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transform-none ${
-                  isHovered && cleanVideoUrl ? "opacity-0" : "opacity-100"
-                }`}
-                loading="lazy"
-              />
-            )}
+      {/* 3D Perspective Card Container with Subtle Tilt */}
+      <div style={{ perspective: 1000 }} className="w-full">
+        <motion.div
+          ref={cardRef}
+          style={
+            shouldReduceMotion
+              ? {}
+              : {
+                  rotateX,
+                  rotateY,
+                  transformStyle: 'preserve-3d',
+                }
+          }
+          className="relative aspect-[16/9] w-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-md group-hover:shadow-[0_10px_35px_rgba(0,0,0,0.5)] transition-[border-color,box-shadow] duration-500 will-change-transform"
+        >
+          {hasMedia ? (
+            <motion.div
+              style={
+                shouldReduceMotion
+                  ? {}
+                  : {
+                      x: imgX,
+                      y: imgY,
+                    }
+              }
+              animate={{
+                scale: isHovered ? 1.06 : 1.02,
+              }}
+              transition={{
+                scale: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+              }}
+              className="w-full h-full relative will-change-transform"
+            >
+              {/* Thumbnail Image */}
+              {cleanThumbnail && (
+                <img
+                  src={cleanThumbnail}
+                  alt={project.title}
+                  draggable={false}
+                  className={`w-full h-full object-cover transition-opacity duration-500 ease-out select-none pointer-events-none ${
+                    isHovered && cleanVideoUrl ? "opacity-0" : "opacity-100"
+                  }`}
+                  loading="lazy"
+                />
+              )}
 
-            {/* Video Preview on Hover (if videoUrl is present) */}
-            {cleanVideoUrl && (
-              <video
-                ref={videoRef}
-                src={cleanVideoUrl}
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                onLoadedMetadata={handleMetadata}
-                onDurationChange={handleMetadata}
-                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transform-none ${
-                  isHovered || !cleanThumbnail ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            )}
-          </>
-        ) : (
-          /* Clearly Marked Empty Placeholder */
-          <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#13193D]/60 border border-dashed border-[#F2F0E9]/20 group-hover:border-[#FF001E]/60 transition-colors">
-            <Film className="w-7 h-7 text-[#F2F0E9]/60 group-hover:text-[#FFAA00] transition-colors mb-3 stroke-[1.5]" />
-            <span className="font-display text-sm text-[#F2F0E9] transition-colors font-bold">
-              {project.title}
-            </span>
-            <span className="text-[11px] text-[#F2F0E9]/50 mt-1 font-mono tracking-wider">
-              Add video in public/assets/videos/
-            </span>
-          </div>
-        )}
+              {/* Video Preview on Hover (if videoUrl is present) */}
+              {cleanVideoUrl && (
+                <video
+                  ref={videoRef}
+                  src={cleanVideoUrl}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  onLoadedMetadata={handleMetadata}
+                  onDurationChange={handleMetadata}
+                  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ease-out select-none pointer-events-none ${
+                    isHovered || !cleanThumbnail ? "opacity-100" : "opacity-0"
+                  }`}
+                />
+              )}
+            </motion.div>
+          ) : (
+            /* Clearly Marked Empty Placeholder */
+            <div className="w-full h-full flex flex-col items-center justify-center p-6 text-center bg-[#13193D]/60 border border-dashed border-[#F2F0E9]/20 group-hover:border-[#FFAA00]/60 transition-colors">
+              <Film className="w-7 h-7 text-[#F2F0E9]/60 group-hover:text-[#FFAA00] transition-colors mb-3 stroke-[1.5]" />
+              <span className="font-display text-sm text-[#F2F0E9] transition-colors font-bold">
+                {project.title}
+              </span>
+              <span className="text-[11px] text-[#F2F0E9]/50 mt-1 font-mono tracking-wider">
+                Add video in public/assets/videos/
+              </span>
+            </div>
+          )}
+        </motion.div>
       </div>
 
       {/* Clean Project Title and Minimal Metadata */}

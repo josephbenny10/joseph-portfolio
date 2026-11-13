@@ -242,11 +242,11 @@ export default function Hero({ onSelectProject }) {
                   activeHover === 'p1' ? 'z-40 scale-[1.025]' : 'z-20'
                 }`}
               >
-                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FF001E] shadow-2xl transition-all duration-500">
+                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-2xl transition-all duration-500">
                   <img
                     src={p1.thumbnail}
                     alt={p1.title}
-                    className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 group-hover:scale-[1.03] transition-all duration-700 ease-out"
+                    className="w-full h-full object-cover grayscale-[10%] group-hover:grayscale-0 group-hover:scale-[1.035] transition-all duration-500 ease-out"
                     loading="eager"
                   />
 
@@ -287,11 +287,11 @@ export default function Hero({ onSelectProject }) {
                   activeHover === 'p2' ? 'z-40 scale-[1.03]' : 'z-30'
                 }`}
               >
-                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FF001E] shadow-2xl transition-all duration-500">
+                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-2xl transition-all duration-500">
                   <img
                     src={p2.thumbnail}
                     alt={p2.title}
-                    className="w-full h-full object-cover grayscale-[12%] group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-700 ease-out"
+                    className="w-full h-full object-cover grayscale-[12%] group-hover:grayscale-0 group-hover:scale-[1.035] transition-all duration-500 ease-out"
                     loading="eager"
                   />
 
@@ -326,11 +326,11 @@ export default function Hero({ onSelectProject }) {
                   activeHover === 'p3' ? 'z-40 scale-[1.03]' : 'z-10'
                 }`}
               >
-                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FF001E] shadow-2xl transition-all duration-500">
+                <div className="relative w-full h-full bg-[#0A0E26] rounded-[2px] overflow-hidden border border-[#F2F0E9]/15 group-hover:border-[#FFAA00]/80 shadow-2xl transition-all duration-500">
                   <img
                     src={p3.thumbnail}
                     alt={p3.title}
-                    className="w-full h-full object-cover grayscale-[12%] group-hover:grayscale-0 group-hover:scale-[1.04] transition-all duration-700 ease-out"
+                    className="w-full h-full object-cover grayscale-[12%] group-hover:grayscale-0 group-hover:scale-[1.035] transition-all duration-500 ease-out"
                     loading="lazy"
                   />
 
