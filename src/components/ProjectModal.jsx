@@ -1,9 +1,11 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { X, Play, Pause, Volume2, VolumeX, Maximize, Minimize, ArrowLeft, ArrowRight, Film } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import { formatDuration } from '../utils/formatTime'
 
 export default function ProjectModal({ project, onClose, onSelectProject }) {
+  const shouldReduceMotion = useReducedMotion()
   const [currentProject, setCurrentProject] = useState(project)
   const [isPlaying, setIsPlaying] = useState(false)
   const [isMuted, setIsMuted] = useState(false)
@@ -239,7 +241,11 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
   const formattedTotalDuration = formatDuration(duration) || '00:00'
 
   return (
-    <div
+    <motion.div
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.98 }}
+      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
       onClick={(e) => {
         // Close when clicking directly on the outer backdrop
         if (e.target === e.currentTarget) {
@@ -268,7 +274,7 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
           aria-label="Close project preview"
         >
           <span>Close</span>
-          <X className="w-3.5 h-3.5" />
+          <X className="w-3.5 h-3.5 group-hover:rotate-90 transition-transform duration-200 ease-out motion-reduce:transform-none" />
         </button>
       </header>
 
@@ -388,7 +394,7 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
           onClick={handlePrev}
           className="group flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#F2F0E9]/70 hover:text-[#FF001E] transition-colors cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-200 ease-out group-hover:-translate-x-1 motion-reduce:transform-none" />
           <span>Previous project</span>
         </button>
 
@@ -398,9 +404,9 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
           className="group flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-[#F2F0E9]/70 hover:text-[#FF001E] transition-colors cursor-pointer"
         >
           <span>Next project</span>
-          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="w-3.5 h-3.5 transition-transform duration-200 ease-out group-hover:translate-x-1 motion-reduce:transform-none" />
         </button>
       </footer>
-    </div>
+    </motion.div>
   )
 }

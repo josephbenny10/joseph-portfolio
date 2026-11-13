@@ -14,14 +14,6 @@ export const profile = {
   bio: "I am a video editor based in Kerala, India · Available Worldwide, passionate about cinema and visual storytelling. I specialize in film edits, scene studies, and short-form cinematic reels that I share on Instagram.\n\nUsing DaVinci Resolve as my primary creative tool, I explore how pacing, music synchronicity, and intentional cut choices can reframe a scene's emotional weight. I am available for freelance collaborations, custom video edits, and creative projects.",
 }
 
-export const showreel = {
-  title: "Featured Edits Reel",
-  year: "2024–2025",
-  software: "DaVinci Resolve",
-  videoUrl: "/assets/videos/BraND.mp4",
-  posterUrl: "/assets/images/B N D.jpg",
-}
-
 export const projects = [
   {
     id: "brand-new-day",

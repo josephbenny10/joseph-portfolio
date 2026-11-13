@@ -12,10 +12,10 @@ import { profile, projects } from '../data/portfolioData'
 
 export default function Hero({ onSelectProject }) {
   const [activeHover, setActiveHover] = useState(null)
-  const [revealFinished, setRevealFinished] = useState(false)
   const heroRef = useRef(null)
   const isFinePointer = useRef(true)
   const shouldReduceMotion = useReducedMotion()
+  const revealFinished = true
 
   useEffect(() => {
     isFinePointer.current = window.matchMedia('(pointer: fine)').matches
@@ -108,7 +108,6 @@ export default function Hero({ onSelectProject }) {
   const p3 = projects[2] // Kingdom of Heaven
 
   const sephLetters = ['S', 'E', 'P', 'H']
-  const initialRotations = [4, -3.5, 3, -4]
 
   return (
     <section
@@ -118,12 +117,7 @@ export default function Hero({ onSelectProject }) {
       className="relative min-h-[92vh] flex flex-col justify-between pt-24 sm:pt-28 pb-8 sm:pb-12 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto select-none overflow-hidden"
     >
       {/* ── Secondary Information Strip ── */}
-      <motion.div
-        initial={shouldReduceMotion ? {} : { opacity: 0, y: -8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F2F0E9]/12 text-xs text-[#F2F0E9]"
-      >
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[#F2F0E9]/12 text-xs text-[#F2F0E9]">
         <div className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-wider text-[#F2F0E9]/80">
           <span>{profile.location}</span>
         </div>
@@ -133,25 +127,20 @@ export default function Hero({ onSelectProject }) {
           <span className="text-[#FFAA00] font-bold">•</span>
           <span>Video Editor</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* ── Editorial Split Composition (Wide Layout) ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 2xl:gap-28 items-center py-6 sm:py-10 flex-1">
         {/* ── LEFT COLUMN: Dominant SEPH Wordmark & Expanded Editorial Flow ── */}
         <div className="lg:col-span-6 flex flex-col justify-center space-y-6 sm:space-y-8 z-20">
           {/* Subtle Role Kicker */}
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-            className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#F2F0E9]/70 font-semibold"
-          >
+          <div className="flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-[#F2F0E9]/70 font-semibold">
             <span>Video Editor</span>
             <span className="text-[#F2F0E9]/30">•</span>
             <span className="text-[#FFAA00] font-bold">Film &amp; Cinematic Reels</span>
-          </motion.div>
+          </div>
 
-          {/* ── Kinetic Mask Reveal & Interactive Parallax SEPH Wordmark ── */}
+          {/* ── Interactive Parallax SEPH Wordmark ── */}
           <div
             className="relative overflow-visible py-1"
             role="heading"
@@ -159,7 +148,10 @@ export default function Hero({ onSelectProject }) {
             aria-label="SEPH"
           >
             <motion.div
-              style={{ y: sephScrollY, x: sephScrollX }}
+              style={{
+                y: sephScrollY,
+                x: sephScrollX,
+              }}
               className="flex items-baseline will-change-transform"
             >
               {sephLetters.map((letter, idx) => (
@@ -168,37 +160,19 @@ export default function Hero({ onSelectProject }) {
                   className="overflow-hidden inline-block leading-[0.72] select-none"
                   aria-hidden="true"
                 >
-                  {/* Layer 1: Mask Reveal Animation (from below clipping boundary) */}
                   <motion.span
-                    initial={
-                      shouldReduceMotion
-                        ? { y: '0%', rotate: 0, scale: 1, opacity: 1 }
-                        : { y: '135%', rotate: initialRotations[idx], scale: 0.88, opacity: 0 }
+                    style={
+                      !shouldReduceMotion
+                        ? {
+                            x: letterParallax[idx].x,
+                            y: letterParallax[idx].y,
+                            rotate: letterParallax[idx].rotate,
+                          }
+                        : {}
                     }
-                    animate={{ y: '0%', rotate: 0, scale: 1, opacity: 1 }}
-                    transition={{
-                      duration: 1.05,
-                      delay: 0.12 + idx * 0.1,
-                      ease: [0.16, 1, 0.3, 1],
-                    }}
-                    onAnimationComplete={idx === 3 ? () => setRevealFinished(true) : undefined}
-                    className="inline-block will-change-transform"
+                    className="inline-block font-wosker text-[24vw] sm:text-[22vw] md:text-[19vw] lg:text-[12rem] xl:text-[14.5rem] 2xl:text-[17rem] text-[#FFAA00] uppercase tracking-tighter will-change-transform"
                   >
-                    {/* Layer 2: Interactive Subtle Cursor Parallax Movement */}
-                    <motion.span
-                      style={
-                        revealFinished && !shouldReduceMotion
-                          ? {
-                              x: letterParallax[idx].x,
-                              y: letterParallax[idx].y,
-                              rotate: letterParallax[idx].rotate,
-                            }
-                          : {}
-                      }
-                      className="inline-block font-wosker text-[24vw] sm:text-[22vw] md:text-[19vw] lg:text-[12rem] xl:text-[14.5rem] 2xl:text-[17rem] text-[#FFAA00] uppercase tracking-tighter will-change-transform"
-                    >
-                      {letter}
-                    </motion.span>
+                    {letter}
                   </motion.span>
                 </span>
               ))}
@@ -208,9 +182,6 @@ export default function Hero({ onSelectProject }) {
           {/* Clean Introduction & Description (Warm White) */}
           <motion.div
             style={{ x: introX }}
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="max-w-2xl xl:max-w-3xl"
           >
             <p className="text-base sm:text-lg md:text-xl lg:text-[1.25rem] text-[#F2F0E9]/85 font-normal leading-relaxed">
@@ -219,12 +190,7 @@ export default function Hero({ onSelectProject }) {
           </motion.div>
 
           {/* Studio CTAs */}
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap items-center gap-4 pt-1"
-          >
+          <div className="flex flex-wrap items-center gap-4 pt-1">
             <a
               href={profile.instagramUrl}
               target="_blank"
@@ -233,33 +199,20 @@ export default function Hero({ onSelectProject }) {
             >
               <Instagram className="w-4 h-4 text-[#F2F0E9]" />
               <span>Follow on Instagram</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#F2F0E9] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-            </a>
-
-            <a
-              href="#showreel"
-              className="group inline-flex items-center gap-2.5 px-5 sm:px-6 py-3 rounded-[2px] bg-[#13193D] hover:bg-[#13193D]/80 border border-[#F2F0E9]/20 hover:border-[#FF001E] text-[#F2F0E9] transition-all duration-200 font-bold text-sm tracking-wide uppercase font-mono"
-            >
-              <Play className="w-3.5 h-3.5 fill-current text-[#FFAA00]" />
-              <span>Watch Reel</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#F2F0E9] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform duration-200 ease-out motion-reduce:transform-none" />
             </a>
 
             <a
               href="#work"
-              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold uppercase tracking-wider font-mono text-[#F2F0E9]/70 hover:text-[#FFAA00] transition-colors py-2 px-1 group"
+              className="group inline-flex items-center gap-2.5 px-5 sm:px-6 py-3 rounded-[2px] bg-[#13193D] hover:bg-[#13193D]/80 border border-[#F2F0E9]/20 hover:border-[#FF001E] text-[#F2F0E9] transition-all duration-200 font-bold text-sm tracking-wide uppercase font-mono"
             >
+              <Play className="w-3.5 h-3.5 fill-current text-[#FFAA00]" />
               <span>Selected Work</span>
-              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
-          </motion.div>
+          </div>
 
           {/* Technical Specs: Software & Availability */}
-          <motion.div
-            initial={shouldReduceMotion ? {} : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.55 }}
-            className="pt-6 grid grid-cols-2 gap-8 border-t border-[#F2F0E9]/12 max-w-2xl font-mono"
-          >
+          <div className="pt-6 grid grid-cols-2 gap-8 border-t border-[#F2F0E9]/12 max-w-2xl font-mono">
             <div>
               <span className="block text-[10px] uppercase tracking-wider text-[#F2F0E9]/50 font-medium">Software</span>
               <span className="font-bold text-xs sm:text-sm text-[#F2F0E9]">DaVinci Resolve</span>
@@ -271,23 +224,16 @@ export default function Hero({ onSelectProject }) {
                 <span>Worldwide</span>
               </span>
             </div>
-          </motion.div>
+          </div>
         </div>
 
         {/* ── RIGHT COLUMN: Expanded Multi-Plane Project Composition ── */}
         <div className="lg:col-span-6 relative w-full flex flex-col justify-center">
-          <div className="relative w-full h-[420px] sm:h-[460px] md:h-[500px] lg:h-[520px] xl:h-[560px]">
+          <div className="relative w-full h-[290px] min-[400px]:h-[320px] min-[480px]:h-[370px] sm:h-[460px] md:h-[500px] lg:h-[520px] xl:h-[560px]">
             {/* ── PANEL 1 (Brand New Day — Top-Right Anchor) ── */}
             {p1 && (
               <motion.div
                 style={{ y: visualY1 }}
-                initial={
-                  shouldReduceMotion
-                    ? {}
-                    : { clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }
-                }
-                animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
-                transition={{ duration: 0.9, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => setActiveHover('p1')}
                 onMouseLeave={() => setActiveHover(null)}
                 onClick={() => onSelectProject && onSelectProject(p1)}
@@ -313,7 +259,7 @@ export default function Hero({ onSelectProject }) {
                       <span className="block font-mono text-[9px] uppercase tracking-wider text-[#FFAA00] font-semibold">
                         {p1.category}
                       </span>
-                      <span className="font-display font-black text-lg sm:text-xl uppercase tracking-tight text-[#F2F0E9] leading-tight">
+                      <span className="font-display font-black text-lg sm:text-xl uppercase tracking-tight text-[#F2F0E9] leading-tight group-hover:translate-x-1 transition-transform duration-200 ease-out inline-block motion-reduce:transform-none">
                         {p1.title}
                       </span>
                     </div>
@@ -333,13 +279,6 @@ export default function Hero({ onSelectProject }) {
                   y: visualY2,
                   rotate: activeHover === 'p2' ? 0 : rotate2,
                 }}
-                initial={
-                  shouldReduceMotion
-                    ? {}
-                    : { clipPath: 'inset(0% 100% 0% 0%)', opacity: 0 }
-                }
-                animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
-                transition={{ duration: 1.0, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => setActiveHover('p2')}
                 onMouseLeave={() => setActiveHover(null)}
                 onClick={() => onSelectProject && onSelectProject(p2)}
@@ -364,7 +303,7 @@ export default function Hero({ onSelectProject }) {
                     <span className="block font-mono text-[9px] uppercase tracking-wider text-[#FFAA00] font-semibold">
                       {p2.category}
                     </span>
-                    <span className="font-display font-black text-base sm:text-lg uppercase tracking-tight text-[#F2F0E9] leading-tight">
+                    <span className="font-display font-black text-base sm:text-lg uppercase tracking-tight text-[#F2F0E9] leading-tight group-hover:translate-x-1 transition-transform duration-200 ease-out inline-block motion-reduce:transform-none">
                       {p2.title}
                     </span>
                   </div>
@@ -379,13 +318,6 @@ export default function Hero({ onSelectProject }) {
                   y: visualY3,
                   rotate: activeHover === 'p3' ? 0 : rotate3,
                 }}
-                initial={
-                  shouldReduceMotion
-                    ? {}
-                    : { clipPath: 'inset(100% 0% 0% 0%)', opacity: 0 }
-                }
-                animate={{ clipPath: 'inset(0% 0% 0% 0%)', opacity: 1 }}
-                transition={{ duration: 0.95, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
                 onMouseEnter={() => setActiveHover('p3')}
                 onMouseLeave={() => setActiveHover(null)}
                 onClick={() => onSelectProject && onSelectProject(p3)}
@@ -410,7 +342,7 @@ export default function Hero({ onSelectProject }) {
                     <span className="block font-mono text-[9px] uppercase tracking-wider text-[#FFAA00] font-semibold">
                       {p3.category}
                     </span>
-                    <span className="font-display font-black text-base sm:text-lg uppercase tracking-tight text-[#F2F0E9] leading-tight">
+                    <span className="font-display font-black text-base sm:text-lg uppercase tracking-tight text-[#F2F0E9] leading-tight group-hover:translate-x-1 transition-transform duration-200 ease-out inline-block motion-reduce:transform-none">
                       {p3.title}
                     </span>
                   </div>
@@ -422,14 +354,9 @@ export default function Hero({ onSelectProject }) {
       </div>
 
       {/* ── Centered Scroll Indicator ── */}
-      <motion.div
-        initial={shouldReduceMotion ? {} : { opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.6 }}
-        className="pt-6 border-t border-[#F2F0E9]/12 flex items-center justify-center"
-      >
+      <div className="pt-6 border-t border-[#F2F0E9]/12 flex items-center justify-center">
         <a
-          href="#showreel"
+          href="#work"
           aria-label="Scroll to explore"
           className="group inline-flex items-center gap-2 text-[#F2F0E9]/70 hover:text-[#FFAA00] transition-colors py-1 focus:outline-none"
         >
@@ -454,7 +381,7 @@ export default function Hero({ onSelectProject }) {
             <ArrowDown className="w-3.5 h-3.5 stroke-[2]" />
           </motion.span>
         </a>
-      </motion.div>
+      </div>
     </section>
   )
 }

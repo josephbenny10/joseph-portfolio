@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import CursorLightEffect from './components/CursorLightEffect'
+import { AnimatePresence } from 'framer-motion'
+import CinematicEntrance from './components/CinematicEntrance'
 import CustomCursor from './components/CustomCursor'
 import Navbar from './components/Navbar'
+import BackToTop from './components/BackToTop'
 import Hero from './sections/Hero'
 import MarqueeTicker from './components/MarqueeTicker'
-import Showreel from './sections/Showreel'
 import SelectedWork from './sections/SelectedWork'
 import About from './sections/About'
 import Services from './sections/Services'
@@ -16,20 +17,22 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#0F1432] text-[#F2F0E9] selection:bg-[#FF001E] selection:text-[#F2F0E9]">
-      {/* Subtle Cursor Light Atmospheric Effect */}
-      <CursorLightEffect />
+      {/* Full-Screen Cinematic SEPH Title Sequence */}
+      <CinematicEntrance />
 
       {/* Minimal Custom Cursor */}
       <CustomCursor />
 
+      {/* Back to Top Floating Button */}
+      <BackToTop />
+
       {/* Editorial Navigation */}
       <Navbar />
 
-      {/* Main Content Flow */}
-      <main>
+      {/* Main Content Flow — fully ready and rendered underneath */}
+      <main className="overflow-x-hidden">
         <Hero onSelectProject={(project) => setActiveProject(project)} />
         <MarqueeTicker />
-        <Showreel />
         <SelectedWork onSelectProject={(project) => setActiveProject(project)} />
         <About />
         <Services />
@@ -37,13 +40,15 @@ export default function App() {
       </main>
 
       {/* Project Detail Modal Overlay */}
-      {activeProject && (
-        <ProjectModal
-          project={activeProject}
-          onClose={() => setActiveProject(null)}
-          onSelectProject={setActiveProject}
-        />
-      )}
+      <AnimatePresence>
+        {activeProject && (
+          <ProjectModal
+            project={activeProject}
+            onClose={() => setActiveProject(null)}
+            onSelectProject={setActiveProject}
+          />
+        )}
+      </AnimatePresence>
     </div>
   )
 }

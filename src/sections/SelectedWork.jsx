@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Film } from 'lucide-react'
 import { projects } from '../data/portfolioData'
 import { formatDuration } from '../utils/formatTime'
@@ -58,8 +59,8 @@ function ProjectItem({ project, onSelect }) {
               <img
                 src={cleanThumbnail}
                 alt={project.title}
-                className={`w-full h-full object-cover transition-all duration-700 ease-out ${
-                  isHovered && cleanVideoUrl ? "opacity-0 scale-[1.02]" : "opacity-100 scale-100"
+                className={`w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transform-none ${
+                  isHovered && cleanVideoUrl ? "opacity-0" : "opacity-100"
                 }`}
                 loading="lazy"
               />
@@ -76,8 +77,8 @@ function ProjectItem({ project, onSelect }) {
                 preload="metadata"
                 onLoadedMetadata={handleMetadata}
                 onDurationChange={handleMetadata}
-                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
-                  isHovered || !cleanThumbnail ? "opacity-100 scale-[1.02]" : "opacity-0 scale-100"
+                className={`absolute inset-0 w-full h-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.03] motion-reduce:transform-none ${
+                  isHovered || !cleanThumbnail ? "opacity-100" : "opacity-0"
                 }`}
               />
             )}
@@ -98,7 +99,7 @@ function ProjectItem({ project, onSelect }) {
 
       {/* Clean Project Title and Minimal Metadata */}
       <div className="pt-1">
-        <h3 className="font-display font-bold text-xl sm:text-2xl text-[#F2F0E9] group-hover:text-[#FFAA00] transition-colors tracking-tight">
+        <h3 className="font-display font-bold text-xl sm:text-2xl text-[#F2F0E9] group-hover:text-[#FFAA00] group-hover:translate-x-1.5 transition-all duration-200 ease-out tracking-tight motion-reduce:transform-none">
           {project.title}
         </h3>
         <p className="text-xs text-[#F2F0E9]/65 mt-0.5 tracking-wide font-mono">
@@ -111,13 +112,42 @@ function ProjectItem({ project, onSelect }) {
 }
 
 export default function SelectedWork({ onSelectProject }) {
+  const shouldReduceMotion = useReducedMotion()
+
+  const cardVariants = {
+    hidden: shouldReduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.55,
+        ease: [0.16, 1, 0.3, 1],
+      },
+    },
+  }
+
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  }
+
   return (
     <section id="work" className="py-24 sm:py-32 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto border-t border-[#F2F0E9]/12">
       {/* Section Header */}
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 sm:mb-16">
+      <motion.div
+        initial={shouldReduceMotion ? false : { opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.2 }}
+        transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-14 sm:mb-16"
+      >
         <div>
           <span className="text-xs font-mono uppercase tracking-widest text-[#F2F0E9]/60 block mb-2 font-medium">
-            02 / Portfolio
+            01 / Portfolio
           </span>
           <h2 className="font-display text-4xl sm:text-6xl font-black tracking-tight text-[#F2F0E9] uppercase">
             Selected Work
@@ -127,18 +157,25 @@ export default function SelectedWork({ onSelectProject }) {
         <p className="text-[#F2F0E9]/80 text-sm sm:text-base max-w-lg leading-relaxed">
           A visual collection of film edits, cinematic reels, and video cuts. Select any piece to view the full video.
         </p>
-      </div>
+      </motion.div>
 
       {/* Spacious 3-Column Editorial Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10 xl:gap-12">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: false, amount: 0.1 }}
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10 xl:gap-12"
+      >
         {projects.map((project) => (
-          <ProjectItem
-            key={project.id}
-            project={project}
-            onSelect={onSelectProject}
-          />
+          <motion.div key={project.id} variants={cardVariants}>
+            <ProjectItem
+              project={project}
+              onSelect={onSelectProject}
+            />
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   )
 }

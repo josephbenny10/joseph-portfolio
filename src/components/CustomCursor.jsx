@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 export default function CustomCursor() {
@@ -6,16 +6,29 @@ export default function CustomCursor() {
   const [cursorText, setCursorText] = useState('')
   const [isHovered, setIsHovered] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const lastPos = useRef({ x: -100, y: -100 })
 
   useEffect(() => {
     // Only run on desktop with fine pointer
     if (window.matchMedia('(pointer: coarse)').matches) return
 
-    const handleMouseMove = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY })
-      if (!isVisible) setIsVisible(true)
+    const updateTargetUnderCursor = (x, y) => {
+      const el = document.elementFromPoint(x, y)
+      const target = el?.closest('[data-cursor]')
+      if (target) {
+        setCursorText(target.getAttribute('data-cursor') || '')
+        setIsHovered(true)
+      } else {
+        setCursorText('')
+        setIsHovered(false)
+      }
+    }
 
-      // Check if hovering an element with data-cursor attribute
+    const handleMouseMove = (e) => {
+      lastPos.current = { x: e.clientX, y: e.clientY }
+      setMousePosition({ x: e.clientX, y: e.clientY })
+      setIsVisible(true)
+
       const target = e.target.closest('[data-cursor]')
       if (target) {
         setCursorText(target.getAttribute('data-cursor') || '')
@@ -26,19 +39,27 @@ export default function CustomCursor() {
       }
     }
 
+    const handleScroll = () => {
+      if (lastPos.current.x >= 0 && lastPos.current.y >= 0) {
+        updateTargetUnderCursor(lastPos.current.x, lastPos.current.y)
+      }
+    }
+
     const handleMouseLeave = () => setIsVisible(false)
     const handleMouseEnter = () => setIsVisible(true)
 
-    window.addEventListener('mousemove', handleMouseMove)
+    window.addEventListener('mousemove', handleMouseMove, { passive: true })
+    window.addEventListener('scroll', handleScroll, { passive: true })
     document.addEventListener('mouseleave', handleMouseLeave)
     document.addEventListener('mouseenter', handleMouseEnter)
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove)
+      window.removeEventListener('scroll', handleScroll)
       document.removeEventListener('mouseleave', handleMouseLeave)
       document.removeEventListener('mouseenter', handleMouseEnter)
     }
-  }, [isVisible])
+  }, [])
 
   if (!isVisible) return null
 
