@@ -244,10 +244,22 @@ export default function ProjectModal({ project, onClose, onSelectProject }) {
 
   return (
     <motion.div
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0 }}
-      transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
+      initial={
+        shouldReduceMotion
+          ? { opacity: 0 }
+          : { opacity: 0, clipPath: 'inset(50% 0% 50% 0%)' }
+      }
+      animate={
+        shouldReduceMotion
+          ? { opacity: 1 }
+          : { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' }
+      }
+      exit={
+        shouldReduceMotion
+          ? { opacity: 0 }
+          : { opacity: 0, clipPath: 'inset(50% 0% 50% 0%)' }
+      }
+      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
       onClick={(e) => {
         // Close when clicking directly on the outer backdrop
         if (e.target === e.currentTarget) {

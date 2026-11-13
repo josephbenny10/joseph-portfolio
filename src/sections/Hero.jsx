@@ -11,6 +11,7 @@ import { ArrowDown, Play, Instagram, ArrowUpRight } from 'lucide-react'
 import { profile, projects } from '../data/portfolioData'
 import Magnetic from '../components/Magnetic'
 import { ViewfinderMarks } from '../components/CinematicElements'
+import CameraViewfinder from '../components/CameraViewfinder'
 
 export default function Hero({ onSelectProject }) {
   const [activeHover, setActiveHover] = useState(null)
@@ -147,8 +148,19 @@ export default function Hero({ onSelectProject }) {
       onMouseLeave={handleMouseLeave}
       className="relative min-h-[88vh] flex flex-col justify-between pt-24 sm:pt-28 pb-8 sm:pb-12 px-5 sm:px-8 md:px-10 lg:px-14 xl:px-16 w-full max-w-[1720px] 2xl:max-w-[1880px] mx-auto select-none overflow-hidden"
     >
+      {/* ── Cinematic Camera Viewfinder Framing & Focal Reticle ── */}
+      <CameraViewfinder
+        smoothMouseX={smoothMouseX}
+        smoothMouseY={smoothMouseY}
+        isFocusLocked={Boolean(activeHover)}
+      />
       {/* ── Editorial Split Composition (Wide Layout) ── */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 2xl:gap-28 items-center py-6 sm:py-10 flex-1">
+      <motion.div
+        initial={shouldReduceMotion ? false : { filter: 'blur(2.5px)', opacity: 0.85 }}
+        animate={{ filter: 'blur(0px)', opacity: 1 }}
+        transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
+        className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 xl:gap-20 2xl:gap-28 items-center py-6 sm:py-10 flex-1"
+      >
         {/* ── LEFT COLUMN: Dominant SEPH Wordmark & Expanded Editorial Flow ── */}
         <motion.div
           style={{ x: typoColX, y: typoColY }}
@@ -441,7 +453,7 @@ export default function Hero({ onSelectProject }) {
             )}
           </div>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* ── Centered Scroll Indicator ── */}
       <div className="pt-6 border-t border-[#F2F0E9]/12 flex items-center justify-center">
